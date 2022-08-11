@@ -16,90 +16,76 @@
 #along with chelsa_isimip3b_ba_1km.  If not, see <https://www.gnu.org/licenses/>.
 
 from functions.chelsa_functions import *
+from functions.chelsa_data_classes import *
+from functions.set_ncdf_attributes import set_ncdf_attributes
+import argparse
 
-def chelsa(coarse_data, dem_data, aux_data, cc_downscale_data, srad_data, TEMP):
-    ### This function is to core of chelsa and calcuates
-    ### all variables. The functions for the variables
-    ### are defined in the chelsa_functions.py file
+ap = argparse.ArgumentParser(
+    description='''# This python code for CHELSA_V2.1_Paleo
+is adapted to the ERA5 data. It runs the CHELSA algorithm for 
+air temperature (tas), and total surface precipitation rate (pr). 
+The output directory needs the following 
+subfolders: /pr, /tas, /tasmax, /tasmin
+Dependencies for ubuntu_18.04:
+libwxgtk3.0-dev libtiff5-dev libgdal-dev libproj-dev 
+libexpat-dev wx-common libogdi3.2-dev unixodbc-dev
+g++ libpcre3 libpcre3-dev wget swig-4.0.1 python2.7-dev 
+software-properties-common gdal-bin python-gdal 
+python2.7-gdal libnetcdf-dev libgdal-dev
+python-pip cdsapi saga_gis-8.2.0 cdo nco 
+All dependencies are resolved in the chelsa_paleo_V.1.0.sif singularity container
+Tested with: singularity version 3.3.0-809.g78ec427cc
+''',
+    epilog='''author: Dirk N. Karger, dirk.karger@wsl.ch, Version 1.0'''
+)
 
-    ### calculate windeffect
-    windef1 = calculate_windeffect(Coarse=coarse_data,
-                                   Dem=dem_data)
+# collect the function arguments
+ap.add_argument('-t','--timestep', type=int, help="timestep, integer")
+ap.add_argument('-i','--input', type=str, help="input directory, string")
+ap.add_argument('-o','--output', type=str,  help="output directory, string")
+ap.add_argument('-tmp','--temp', type=str, help="root for temporary directory, string")
 
-    ### correct windeffect
-    wind_cor, wind_coarse25, windcoarse = correct_windeffect(windef1=windef1,
-                                                             Coarse=coarse_data,
-                                                             Dem=dem_data,
-                                                             Aux=aux_data)
 
-    ### clean up memory
-    wind_cor.Save(TEMP + 'wind_cor.sgrd')
-    windcoarse.Save(TEMP + 'wincoarse.sgrd')
-    wind_coarse25.Save(TEMP + 'wind_coarse25.sgrd')
+args = ap.parse_args()
+print(args)
 
-    saga_api.SG_Get_Data_Manager().Delete_All()
 
-    wind_cor = load_sagadata(TEMP + 'wind_cor.sgrd')
-    windcoarse = load_sagadata(TEMP + 'wincoarse.sgrd')
-    wind_coarse25 =load_sagadata(TEMP + 'wind_coarse25.sgrd')
+INPUT = args.input
+OUTPUT = args.output
+TEMP = args.temp
+timestep = args.timestep
 
-    ### downscale precipitation
-    pr = precipitation(wind_cor=wind_cor,
-                       wind_coarse=windcoarse,
-                       wind_coarse25=wind_coarse25,
-                       Coarse=coarse_data,
-                       Aux=aux_data)
 
-    ### clean up memory
-    pr.Save(TEMP + 'pr.sgrd')
-    saga_api.SG_Get_Data_Manager().Delete_All()
+def main():
+    saga_api.SG_Get_Data_Manager().Delete_All()  #
+    Load_Tool_Libraries(True)
 
-    ### downscale cloud cover
-    cc_fin = cloudcover(Cc_downscale_data=cc_downscale_data,
-                        Aux=aux_data)
+    ### create the data classes
+    coarse_data = Coarse_data(INPUT=INPUT, timestep=timestep)
+    dem_data = Dem_data(INPUT=INPUT, time=timestep-1)
 
-    rsds = solar_radiation(Srad=srad_data,
-                           Coarse=coarse_data,
-                           cc_fin=cc_fin)
+    tas, tasmax, tasmin, pr = chelsa(coarse_data=coarse_data,
+                                     dem_data=dem_data,
+                                     TEMP=TEMP)
 
-    ### clean up memory
-    rsds.Save(TEMP + 'rsds.sgrd')
-    saga_api.SG_Get_Data_Manager().Delete_All()
+    outfile = OUTPUT + 'tas/CHELSA_PALEO_tas_' + str(timestep) + '_V.1.0.nc'
+    os.system('gdal_translate -ot Float32 -co "COMPRESS=DEFLATE" -co "ZLEVEL=9" ' + TEMP + 'tas_high.sdat ' + outfile)
+    set_ncdf_attributes(outfile=outfile,
+                        var='tas',
+                        scale='0.1',
+                        offset='0',
+                        standard_name='air_temperature',
+                        longname='Near-Surface Air Temperatures',
+                        unit='K')
 
-    ### downscale tas
-    tas = temperature(Coarse=coarse_data,
-                      Dem=dem_data,
-                      Aux=aux_data,
-                      var='tas')
-
-    ### clean up memory
-    tas.Save(TEMP + 'tas.sgrd')
-    saga_api.SG_Get_Data_Manager().Delete_All()
-
-    ### downscale tasmin
-    tasmin = temperature(Coarse=coarse_data,
-                         Dem=dem_data,
-                         Aux=aux_data,
-                         var='tasmin')
-
-    ### downscale tasmax
-    tasmax = temperature(Coarse=coarse_data,
-                         Dem=dem_data,
-                         Aux=aux_data,
-                         var='tasmax')
-
-    # avoid delta tasmax tasmin being negative due to interpolation artefacts
-    tasmax = grid_statistics(tasmax,
-                             tasmin, 0).asGrid()
-
-    tasmin = grid_statistics(tasmax,
-                             tasmin, 1).asGrid()
-
-    rsds = load_sagadata(TEMP + 'rsds.sgrd')
-    pr = load_sagadata(TEMP + 'pr.sgrd')
-    tas = load_sagadata(TEMP + 'tas.sgrd')
-
-    return tas, tasmax, tasmin, rsds, pr
-
+    outfile = OUTPUT + 'pr/CHELSA_HR_pr_' + str(YEAR) + '-' + str("%02d" % MONTH) + '-' + str("%02d" % DAY) + '-' + str("%02d" % HOUR) + '_V.1.0.nc'
+    os.system('gdal_translate -ot Float32 -co "COMPRESS=DEFLATE" -co "ZLEVEL=9" ' + TEMP + 'pr_high.sdat ' + outfile)
+    set_ncdf_attributes(outfile=outfile,
+                        var='pr',
+                        scale='0.001',
+                        offset='0',
+                        standard_name='precipitation_flux',
+                        longname='Precipitation',
+                        unit='kg m-2 h-1')
 
 
