@@ -123,7 +123,7 @@ The chelsa_paleo model is a reduced and generalized version of the CHELSA V2.1 m
 The main function chelsa.py can be called by providing the parameters 
 timestep, inputdirectory, and outputdirectory. 
 
-chelsa.py -t <timestep> -i <inputdirectory> -o <outputdirectory>
+chelsa.py -t \<timestep\> -i \<inputdirectory\> -o \<outputdirectory\>
 
 
 SINGULARITY
@@ -133,6 +133,7 @@ be installed on the respective linux system you are using. An installation guide
 https://sylabs.io/guides/3.3/user-guide/quick_start.html#quick-installation-steps
 
 If you use chelsa_paleo together with singularity the command should be slightly modified:
+
 singularity exec /singularity/chelsa_paleo.sif python chelsa.py -t <timestep> -i <inputdirectory> -o <outputdirectory> 
 
 We strongly recommend that you use the singularity container instead of trying to resolve all dependencies yourself.
@@ -154,11 +155,7 @@ CONTACT
 AUTHOR
 ------
 Dirk Nikolaus Karger
-
 Swiss Federal Research Institute WSL
-
 Zürcherstrasse 111
-
-8903 Birmensdorf 
-
+8903 Birmensdorf
 Switzerland

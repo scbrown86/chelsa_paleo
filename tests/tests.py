@@ -53,10 +53,6 @@ def chelsa(coarse_data=None, dem_data=None, TEMP=None):
 
 
 
-# test with singularity
-
-
-
 
 
 
