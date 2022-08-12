@@ -2,18 +2,12 @@
 INPUT = '/storage/karger/chelsa_V2/INPUT_PALEO/'
 TEMP = '/home/karger/scratch/'
 
-from functions.chelsa_functions import *
-from functions.chelsa_data_classes import *
-
 saga_api.SG_Get_Data_Manager().Delete_All()  #
 Load_Tool_Libraries(True)
 
 ### create the data classes
 coarse_data = Coarse_data(INPUT=INPUT, timestep=1)
 dem_data = Dem_data(INPUT=INPUT, time=0)
-
-Coarse = coarse_data
-Dem = dem_data
 
 def chelsa(coarse_data=None, dem_data=None, TEMP=None):
     """
@@ -59,6 +53,7 @@ def chelsa(coarse_data=None, dem_data=None, TEMP=None):
 
 
 
+# test with singularity
 
 
 
@@ -67,18 +62,6 @@ def chelsa(coarse_data=None, dem_data=None, TEMP=None):
 
 
 
-
-
-timestep=1
-
-talow = import_ncdf(INPUT + 'clim/tas.nc').Get_Grid(timestep)
-tahigh = import_ncdf(INPUT + 'clim/ta.nc').Get_Grid(timestep)
-zglow = import_ncdf(INPUT + 'orog/oro.nc').Get_Grid(timestep)
-zghigh = import_ncdf(INPUT + 'clim/zg.nc').Get_Grid(timestep)
-
-
-
-                .Set_Scaling(0.10197162129)
 
 
 

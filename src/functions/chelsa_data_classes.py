@@ -1,24 +1,22 @@
 #!/usr/bin/env python
 
-#This file is part of chelsa_isimip3b_ba_1km.
+#This file is part of chelsa_paleo.
 #
-#chelsa_isimip3b_ba_1km is free software: you can redistribute it and/or modify
+#chelsa_highres is free software: you can redistribute it and/or modify
 #it under the terms of the GNU General Public License as published by
 #the Free Software Foundation, either version 3 of the License, or
 #(at your option) any later version.
 
-#chelsa_isimip3b_ba_1km is distributed in the hope that it will be useful,
+#chelsa_highres is distributed in the hope that it will be useful,
 #but WITHOUT ANY WARRANTY; without even the implied warranty of
 #MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #GNU General Public License for more details.
 
 #You should have received a copy of the GNU General Public License
-#along with chelsa_isimip3b_ba_1km.  If not, see <https://www.gnu.org/licenses/>.
+#along with chelsa_paleo.  If not, see <https://www.gnu.org/licenses/>.
 
-from functions.saga_functions import *
-Load_Tool_Libraries(True)
 
-#change this that it accepts lat long
+from src.functions.saga_functions import *
 
 class Coarse_data:
     """
@@ -53,28 +51,20 @@ class Coarse_data:
     def _build_(self, var):
         if var != 'tlapse_mean' and var != 'rsds':
             ds = import_ncdf(self.INPUT + 'clim/' + var + '.nc').Get_Grid(self.timestep)
-            #ds = change_latlong(ds)
             setattr(self, var, ds)
 
         if var == 'tlapse_mean':
-            talow = import_ncdf(self.INPUT + 'clim/ta_1000.nc').Get_Grid(self.timestep)
-            tahigh = import_ncdf(self.INPUT + 'clim/ta_850.nc').Get_Grid(self.timestep)
-            zglow = import_ncdf(self.INPUT + 'clim/zg_1000.nc').Get_Grid(self.timestep)
-            zghigh = import_ncdf(self.INPUT + 'clim/zg_850.nc').Get_Grid(self.timestep)#.Set_Scaling(0.10197162129)
+            talow = import_ncdf(self.INPUT + 'clim/ta_low.nc').Get_Grid(self.timestep)
+            tahigh = import_ncdf(self.INPUT + 'clim/ta_high.nc').Get_Grid(self.timestep)
+            zglow = import_ncdf(self.INPUT + 'clim/zg_low.nc').Get_Grid(self.timestep)
+            zghigh = import_ncdf(self.INPUT + 'clim/zg_high.nc').Get_Grid(self.timestep)#.Set_Scaling(0.10197162129)
             tlapse_mean = tlapse(tahigh, talow , zghigh, zglow,  '(a-b)/(c-d)')
             tlapse_mean1 = change_data_storage(tlapse_mean)
             tlapse_mean2 = grid_calculator_simple(tlapse_mean1, 'a*(-1)')
-            #tlapse_mean3 = change_latlong(tlapse_mean2)
             setattr(self, var, tlapse_mean2)
 
-            #self._delete_grid_list_(talow)
-            #self._delete_grid_list_(tahigh)
-            #self._delete_grid_list_(zglow)
-            #self._delete_grid_list_(zghigh)
             saga_api.SG_Get_Data_Manager().Delete(tlapse_mean)
             saga_api.SG_Get_Data_Manager().Delete(tlapse_mean1)
-            #saga_api.SG_Get_Data_Manager().Delete(tlapse_mean2)
-            #saga_api.SG_Get_Data_Manager().Delete_Unsaved()
 
 
 class Dem_data:
@@ -82,9 +72,9 @@ class Dem_data:
     elevational grid data class
     """
     def __init__(self, INPUT, time=0):
-        self.demproj = None #load_sagadata(INPUT + 'dem_merc3.sgrd')
-        self.dem_low = None #load_sagadata(INPUT + 'orography.sgrd')
-        self.dem_high = None #load_sagadata(INPUT + 'dem_latlong.sgrd')
+        self.demproj = None
+        self.dem_low = None
+        self.dem_high = None
         self.INPUT = INPUT
         self.time = int(time)
 

@@ -1,23 +1,23 @@
 #!/usr/bin/env python
 
-#This file is part of chelsa_isimip3b_ba_1km.
+#This file is part of chelsa_paleo.
 #
-#chelsa_isimip3b_ba_1km is free software: you can redistribute it and/or modify
+#chelsa_highres is free software: you can redistribute it and/or modify
 #it under the terms of the GNU General Public License as published by
 #the Free Software Foundation, either version 3 of the License, or
 #(at your option) any later version.
 
-#chelsa_isimip3b_ba_1km is distributed in the hope that it will be useful,
+#chelsa_highres is distributed in the hope that it will be useful,
 #but WITHOUT ANY WARRANTY; without even the implied warranty of
 #MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #GNU General Public License for more details.
 
 #You should have received a copy of the GNU General Public License
-#along with chelsa_isimip3b_ba_1km.  If not, see <https://www.gnu.org/licenses/>.
+#along with chelsa_paleo.  If not, see <https://www.gnu.org/licenses/>.
 
-from functions.chelsa_functions import *
-from functions.chelsa_data_classes import *
-from functions.set_ncdf_attributes import set_ncdf_attributes
+from src.functions.chelsa_functions import *
+from src.functions.chelsa_data_classes import *
+from src.functions.set_ncdf_attributes import set_ncdf_attributes
 import argparse
 
 ap = argparse.ArgumentParser(
@@ -29,10 +29,10 @@ subfolders: /pr, /tas, /tasmax, /tasmin
 Dependencies for ubuntu_18.04:
 libwxgtk3.0-dev libtiff5-dev libgdal-dev libproj-dev 
 libexpat-dev wx-common libogdi3.2-dev unixodbc-dev
-g++ libpcre3 libpcre3-dev wget swig-4.0.1 python2.7-dev 
+g++ libpcre3 libpcre3-dev swig-4.0.1 python2.7-dev 
 software-properties-common gdal-bin python-gdal 
 python2.7-gdal libnetcdf-dev libgdal-dev
-python-pip cdsapi saga_gis-8.2.0 cdo nco 
+python-pip saga_gis-8.2.0 
 All dependencies are resolved in the chelsa_paleo_V.1.0.sif singularity container
 Tested with: singularity version 3.3.0-809.g78ec427cc
 ''',
@@ -48,7 +48,6 @@ ap.add_argument('-tmp','--temp', type=str, help="root for temporary directory, s
 
 args = ap.parse_args()
 print(args)
-
 
 INPUT = args.input
 OUTPUT = args.output
@@ -68,18 +67,43 @@ def main():
                                      dem_data=dem_data,
                                      TEMP=TEMP)
 
-    outfile = OUTPUT + 'tas/CHELSA_PALEO_tas_' + str(timestep) + '_V.1.0.nc'
-    os.system('gdal_translate -ot Float32 -co "COMPRESS=DEFLATE" -co "ZLEVEL=9" ' + TEMP + 'tas_high.sdat ' + outfile)
+    tas.Save(TEMP + 'tas.sgrd')
+    tasmax.Save(TEMP + 'tasmax.sgrd')
+    tasmin.Save(TEMP + 'tasmin.sgrd')
+    pr.Save(TEMP + 'pr.sgrd')
+
+    outfile = OUTPUT + 'tas/CHELSA_tas_' + str(timestep) + '_V.1.0.nc'
+    os.system('gdal_translate -ot Float32 -co "COMPRESS=DEFLATE" -co "ZLEVEL=9" ' + TEMP + 'tas.sdat ' + outfile)
     set_ncdf_attributes(outfile=outfile,
                         var='tas',
                         scale='0.1',
                         offset='0',
                         standard_name='air_temperature',
-                        longname='Near-Surface Air Temperatures',
+                        longname='Daily Mean Near-Surface Air Temperatures',
                         unit='K')
 
-    outfile = OUTPUT + 'pr/CHELSA_HR_pr_' + str(YEAR) + '-' + str("%02d" % MONTH) + '-' + str("%02d" % DAY) + '-' + str("%02d" % HOUR) + '_V.1.0.nc'
-    os.system('gdal_translate -ot Float32 -co "COMPRESS=DEFLATE" -co "ZLEVEL=9" ' + TEMP + 'pr_high.sdat ' + outfile)
+    outfile = OUTPUT + 'tasmax/CHELSA_tasmax_' + str(timestep) + '_V.1.0.nc'
+    os.system('gdal_translate -ot Float32 -co "COMPRESS=DEFLATE" -co "ZLEVEL=9" ' + TEMP + 'tasmax.sdat ' + outfile)
+    set_ncdf_attributes(outfile=outfile,
+                        var='tas',
+                        scale='0.1',
+                        offset='0',
+                        standard_name='air_temperature',
+                        longname='Daily Maximum Near-Surface Air Temperatures',
+                        unit='K')
+
+    outfile = OUTPUT + 'tasmin/CHELSA_tasmin_' + str(timestep) + '_V.1.0.nc'
+    os.system('gdal_translate -ot Float32 -co "COMPRESS=DEFLATE" -co "ZLEVEL=9" ' + TEMP + 'tasmin.sdat ' + outfile)
+    set_ncdf_attributes(outfile=outfile,
+                        var='tas',
+                        scale='0.1',
+                        offset='0',
+                        standard_name='air_temperature',
+                        longname='Daily Minimum Near-Surface Air Temperatures',
+                        unit='K')
+
+    outfile = OUTPUT + 'pr/CHELSA_pr_' + str(timestep) + '_V.1.0.nc'
+    os.system('gdal_translate -ot Float32 -co "COMPRESS=DEFLATE" -co "ZLEVEL=9" ' + TEMP + 'pr.sdat ' + outfile)
     set_ncdf_attributes(outfile=outfile,
                         var='pr',
                         scale='0.001',
@@ -89,3 +113,5 @@ def main():
                         unit='kg m-2 h-1')
 
 
+if __name__ == '__main__':
+    main()

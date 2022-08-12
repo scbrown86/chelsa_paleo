@@ -22,9 +22,6 @@ import os
 import os.path
 
 
-# ********************************************************
-# Define functions needed for the calculations
-# ********************************************************
 def Load_Tool_Libraries(Verbose):
     saga_api.SG_UI_Msg_Lock(True)
     if os.name == 'nt':  # Windows
