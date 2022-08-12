@@ -16,7 +16,7 @@
 #along with chelsa_paleo.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from src.functions.saga_functions import *
+from functions.saga_functions import *
 
 class Coarse_data:
     """

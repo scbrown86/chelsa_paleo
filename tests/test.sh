@@ -1,0 +1,4 @@
+
+
+
+singularity exec ~/singularity/chelsa_paleo.sif python /home/karger/scripts/chelsa_paleo/src/chelsa.py -t 1 -i /storage/karger/chelsa_V2/INPUT_PALEO/ -o /storage/karger/chelsa_V2/OUTPUT_PALEO/
