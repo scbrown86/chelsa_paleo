@@ -134,7 +134,7 @@ https://sylabs.io/guides/3.3/user-guide/quick_start.html#quick-installation-step
 
 If you use chelsa_paleo together with singularity the command should be slightly modified:
 
-singularity exec /singularity/chelsa_paleo.sif python chelsa.py -t <timestep> -i <inputdirectory> -o <outputdirectory> 
+singularity exec /singularity/chelsa_paleo.sif python chelsa.py -t \<timestep\> -i \<inputdirectory\> -o \<outputdirectory\> 
 
 We strongly recommend that you use the singularity container instead of trying to resolve all dependencies yourself.
 
