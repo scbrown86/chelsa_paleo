@@ -136,6 +136,8 @@ If you use chelsa_paleo together with singularity the command should be slightly
 singularity exec /singularity/chelsa_paleo.sif python chelsa.py -t <timestep> -i <inputdirectory> -o <outputdirectory> 
 
 We strongly recommend that you use the singularity container instead of trying to resolve all dependencies yourself.
+
+
 CITATION:
 ------------
 If you need a citation for the output, please refer to the article describing the high
