@@ -35,7 +35,7 @@ def set_ncdf_attributes(outfile, var, scale, offset, standard_name, longname, un
     os.system("ncatted -O -h -a history,global,d,, " + outfile)
     os.system("ncatted -O -h -a NCO,global,d,, " + outfile)
     os.system("ncatted -O -h -a history_of_appended_files,global,d,, " + outfile)
-    os.system("ncatted -O -h -a FillValue,", + var + ",o,f,32767")
+    os.system("ncatted -O -h -a _FillValue," + var + ",o,f,32767")
 
     return True
 
