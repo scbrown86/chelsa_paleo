@@ -19,6 +19,7 @@ from functions.chelsa_functions import *
 from functions.chelsa_data_classes import *
 from functions.set_ncdf_attributes import set_ncdf_attributes
 import argparse
+import os
 
 ap = argparse.ArgumentParser(
     description='''# This python code for CHELSA_V2.1_Paleo
