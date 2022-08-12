@@ -15,9 +15,9 @@
 #You should have received a copy of the GNU General Public License
 #along with chelsa_paleo.  If not, see <https://www.gnu.org/licenses/>.
 
-from src.functions.chelsa_functions import *
-from src.functions.chelsa_data_classes import *
-from src.functions.set_ncdf_attributes import set_ncdf_attributes
+from functions.chelsa_functions import *
+from functions.chelsa_data_classes import *
+from functions.set_ncdf_attributes import set_ncdf_attributes
 import argparse
 
 ap = argparse.ArgumentParser(
