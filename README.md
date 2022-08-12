@@ -154,7 +154,11 @@ CONTACT
 AUTHOR
 ------
 Dirk Nikolaus Karger
+
 Swiss Federal Research Institute WSL
+
 Zürcherstrasse 111
+
 8903 Birmensdorf 
+
 Switzerland
