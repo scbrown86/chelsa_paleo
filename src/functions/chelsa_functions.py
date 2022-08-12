@@ -156,7 +156,7 @@ def precipitation(wind_cor, wind_coarse, Coarse):
     Coarse.set('pr')
 
     prec = grid_calculator_simple(Coarse.pr,
-                                  'a*86400')
+                                  'a*1000')
 
     Coarse.delete('pr')
 

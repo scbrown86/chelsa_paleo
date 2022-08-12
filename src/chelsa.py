@@ -74,7 +74,7 @@ def main():
     pr.Save(TEMP + 'pr.sgrd')
 
     outfile = OUTPUT + 'tas/CHELSA_tas_' + str(timestep) + '_V.1.0.nc'
-    os.system('gdal_translate -ot Float32 -co "COMPRESS=DEFLATE" -co "ZLEVEL=9" ' + TEMP + 'tas.sdat ' + outfile)
+    os.system('gdal_translate -ot Int16 -of netCDF -co "ZLEVEL=9" ' + TEMP + 'tas.sdat ' + outfile)
     set_ncdf_attributes(outfile=outfile,
                         var='tas',
                         scale='0.1',
@@ -84,7 +84,7 @@ def main():
                         unit='K')
 
     outfile = OUTPUT + 'tasmax/CHELSA_tasmax_' + str(timestep) + '_V.1.0.nc'
-    os.system('gdal_translate -ot Float32 -co "COMPRESS=DEFLATE" -co "ZLEVEL=9" ' + TEMP + 'tasmax.sdat ' + outfile)
+    os.system('gdal_translate -ot Int16 -of netCDF -co "ZLEVEL=9" ' + TEMP + 'tasmax.sdat ' + outfile)
     set_ncdf_attributes(outfile=outfile,
                         var='tas',
                         scale='0.1',
@@ -94,7 +94,7 @@ def main():
                         unit='K')
 
     outfile = OUTPUT + 'tasmin/CHELSA_tasmin_' + str(timestep) + '_V.1.0.nc'
-    os.system('gdal_translate -ot Float32 -co "COMPRESS=DEFLATE" -co "ZLEVEL=9" ' + TEMP + 'tasmin.sdat ' + outfile)
+    os.system('gdal_translate -ot Int16 -of netCDF -co "ZLEVEL=9" ' + TEMP + 'tasmin.sdat ' + outfile)
     set_ncdf_attributes(outfile=outfile,
                         var='tas',
                         scale='0.1',
@@ -104,14 +104,14 @@ def main():
                         unit='K')
 
     outfile = OUTPUT + 'pr/CHELSA_pr_' + str(timestep) + '_V.1.0.nc'
-    os.system('gdal_translate -ot Float32 -co "COMPRESS=DEFLATE" -co "ZLEVEL=9" ' + TEMP + 'pr.sdat ' + outfile)
+    os.system('gdal_translate -ot Int16 -of netCDF -co "ZLEVEL=9" ' + TEMP + 'pr.sdat ' + outfile)
     set_ncdf_attributes(outfile=outfile,
                         var='pr',
                         scale='0.001',
                         offset='0',
                         standard_name='precipitation_flux',
                         longname='Precipitation',
-                        unit='kg m-2 h-1')
+                        unit='kg m-2 s-1')
 
 
 if __name__ == '__main__':
