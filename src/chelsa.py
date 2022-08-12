@@ -86,7 +86,7 @@ def main():
     outfile = OUTPUT + 'tasmax/CHELSA_tasmax_' + str(timestep) + '_V.1.0.nc'
     os.system('gdal_translate -ot Int16 -of netCDF -co "ZLEVEL=9" ' + TEMP + 'tasmax.sdat ' + outfile)
     set_ncdf_attributes(outfile=outfile,
-                        var='tas',
+                        var='tasmax',
                         scale='0.1',
                         offset='0',
                         standard_name='air_temperature',
@@ -96,7 +96,7 @@ def main():
     outfile = OUTPUT + 'tasmin/CHELSA_tasmin_' + str(timestep) + '_V.1.0.nc'
     os.system('gdal_translate -ot Int16 -of netCDF -co "ZLEVEL=9" ' + TEMP + 'tasmin.sdat ' + outfile)
     set_ncdf_attributes(outfile=outfile,
-                        var='tas',
+                        var='tasmin',
                         scale='0.1',
                         offset='0',
                         standard_name='air_temperature',
@@ -107,7 +107,7 @@ def main():
     os.system('gdal_translate -ot Int16 -of netCDF -co "ZLEVEL=9" ' + TEMP + 'pr.sdat ' + outfile)
     set_ncdf_attributes(outfile=outfile,
                         var='pr',
-                        scale='0.001',
+                        scale='0.0000011574',
                         offset='0',
                         standard_name='precipitation_flux',
                         longname='Precipitation',
