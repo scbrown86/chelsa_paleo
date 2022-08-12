@@ -1,6 +1,6 @@
 chelsa_paleo
 -----------
-This package contains functions to downscae min-, max-, mean 
+This package contains functions to downscale min-, max-, mean 
 temperature, and precipitation rate from global circulation models
 using the CHELSA V2.1 algorithm as. It is part of the
 CHELSA Project: (CHELSA, <https://www.chelsa-climate.org/>).
@@ -67,7 +67,7 @@ It requires input from a global circulation or earth system model in form of gri
 netCDF files. The following files need to be provided in a single input directory:
 
 
-CLIMATE DATA
+INPUT DATA - CLIMATE DATA
 -------
 files to be stored in a subdirectory /clim
 
@@ -88,7 +88,7 @@ lapse rate calculation (e.g. 850 hPa) of n timesteps
 lapse rate calculation (e.g. 1000 hPa) of n timesteps
 
 
-OROGRAPHIC DATA
+INPUT DATA - OROGRAPHIC DATA
 -------
 files to be stored in a subdirectory /orog
 
@@ -96,7 +96,7 @@ files to be stored in a subdirectory /orog
 - oro_high.nc : a netCDF file containing the orography at the high (target) resolution of n timesteps
 
 
-STATIC DATA
+INPUT DATA - STATIC DATA
 -------
 files to be stored in a subdirectory /static
 
