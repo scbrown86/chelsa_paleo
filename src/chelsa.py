@@ -61,7 +61,7 @@ def main():
     Load_Tool_Libraries(True)
 
     ### create the data classes
-    coarse_data = Coarse_data(INPUT=INPUT, timestep=timestep)
+    coarse_data = Coarse_data(INPUT=INPUT, timestep=timestep-1)
     dem_data = Dem_data(INPUT=INPUT, time=timestep-1)
 
     tas, tasmax, tasmin, pr = chelsa(coarse_data=coarse_data,
