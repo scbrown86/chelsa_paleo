@@ -1,2 +1,2 @@
 # run this command in the terminal
-singularity exec -B /storage ~/singularity/chelsa_paleo.sif python /home/karger/scripts/chelsa_paleo/src/chelsa.py -t 1 -i /storage/karger/chelsa_V2/INPUT_PALEO/ -o /storage/karger/chelsa_V2/OUTPUT_PALEO/ -tmp /home/karger/scratch/
+singularity exec -B /storage /home/karger/scripts/chelsa_paleo/singularity/chelsa_paleo.sif python /home/karger/scripts/chelsa_paleo/src/chelsa.py -t 1 -i /storage/karger/chelsa_V2/INPUT_PALEO/ -o /storage/karger/chelsa_V2/OUTPUT_PALEO/ -tmp /home/karger/scratch/
