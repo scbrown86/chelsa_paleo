@@ -94,19 +94,22 @@ class Dem_data:
 
     def _build_(self, var):
         if var == 'demproj':
-            ds1 = import_ncdf(self.INPUT + 'orog/oro_high.nc').Get_Grid(self.time)
+            # ds1 = import_ncdf(self.INPUT + 'orog/oro_high.nc').Get_Grid(self.time)
+            ds1 = import_ncdf(self.INPUT + 'orog/oro_high.nc').Get_Grid(0) # use first time step only
             set_2_latlong(ds1)
             template = import_ncdf(self.INPUT + 'static/merc_template.nc').Get_Grid(0)
             ds = pj2merc(ds1, template)
             setattr(self, var, ds.asGrid())
 
         if var == 'dem_low':
-            ds = import_ncdf(self.INPUT + 'orog/oro.nc').Get_Grid(self.time)
+            # ds = import_ncdf(self.INPUT + 'orog/oro.nc').Get_Grid(self.time)
+            ds = import_ncdf(self.INPUT + 'orog/oro.nc').Get_Grid(0)
             ds = change_data_storage(ds)
             setattr(self, var, ds)
 
         if var == 'dem_high':
-            ds = import_ncdf(self.INPUT + 'orog/oro_high.nc').Get_Grid(self.time)
+            # ds = import_ncdf(self.INPUT + 'orog/oro_high.nc').Get_Grid(self.time)
+            ds = import_ncdf(self.INPUT + 'orog/oro_high.nc').Get_Grid(0)
             ds = change_data_storage(ds)
             setattr(self, var, ds)
 

@@ -63,6 +63,8 @@ def main():
     ### create the data classes
     coarse_data = Coarse_data(INPUT=INPUT, timestep=timestep-1)
     dem_data = Dem_data(INPUT=INPUT, time=timestep-1)
+    
+    print("Loaded coarse_data and dem_data")
 
     tas, tasmax, tasmin, pr = chelsa(coarse_data=coarse_data,
                                      dem_data=dem_data,

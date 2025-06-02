@@ -31,10 +31,13 @@ def Load_Tool_Libraries(Verbose):
         saga_api.SG_Get_Tool_Library_Manager().Add_Directory('/usr/local/lib/saga/',
                                                              False)  # Or set the Tool directory like this!
     saga_api.SG_UI_Msg_Lock(False)
+   
+    saga_api.SG_OMP_Set_Max_Num_Threads(2)  # cores hardcoded to 2
 
     if Verbose == True:
         print 'Python - Version ' + sys.version
-        print saga_api.SAGA_API_Get_Version()
+        print saga_api.SAGA_API_Get_Version()        
+        print 'number of maximum threads used: ' + str(saga_api.SG_OMP_Get_Max_Num_Threads())
         print 'number of loaded libraries: ' + str(saga_api.SG_Get_Tool_Library_Manager().Get_Count())
         print
 
