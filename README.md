@@ -39,10 +39,6 @@ def Load_Tool_Libraries(Verbose):
     return saga_api.SG_Get_Tool_Library_Manager().Get_Count()
 ```
 
-CHELSA_paleo has been installed in a conda environment named `CHELSA_paleo` which will need to be activated before running the test.
-
-_most_ of the pre-processing occurs in bash scripts which require the `nco_stable` environment to be activated.
-
 COPYRIGHT
 ---------
 (C) 2022 Dirk Nikolaus Karger
