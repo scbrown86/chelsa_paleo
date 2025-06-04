@@ -75,6 +75,7 @@ Thumbs.db
 
 # Ignore everything inside singularity/...
 singularity/*
+singularity/*.sif
 
 # ...except this file (to keep the folder in the repo)
 !singularity/.gitkeep
