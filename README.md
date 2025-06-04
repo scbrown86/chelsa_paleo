@@ -42,6 +42,7 @@ def Load_Tool_Libraries(Verbose):
 COPYRIGHT
 ---------
 (C) 2022 Dirk Nikolaus Karger
+
 (C) 2025 Stuart Brown
 
 
@@ -127,7 +128,9 @@ files to be stored in a subdirectory /orog
 INPUT DATA - STATIC DATA
 -------
 files to be stored in a subdirectory /static
+
 -merc_template.nc : a netCDF file containing the orography at high (target) resolution in World Mercator projection (here we use a 5-km grid)
+
 
 `EPSG:3395`
 
@@ -180,11 +183,11 @@ END=1080 # expected final number of timesteps
 START=1
 START_TIME=$(date +%s)
 
-export SINGULARITY_IMG="/home/dafcluster4/chelsa_paleo/singularity/chelsa_paleo.sif"
-export SCRIPT="/home/dafcluster4/chelsa_paleo/src/chelsa.py"
-export INPUT_DIR="/home/dafcluster4/Documents/GitHub/temperature_test/02_data/03_CHELSA_paleo/"
-export OUTPUT_DIR="/home/dafcluster4/Documents/GitHub/temperature_test/02_data/03_CHELSA_paleo/out/"
-export SCRATCH_DIR="/home/dafcluster4/Documents/GitHub/temperature_test/02_data/03_CHELSA_paleo/scratch/"
+export SINGULARITY_IMG="~/chelsa_paleo/singularity/chelsa_paleo.sif"
+export SCRIPT="~/chelsa_paleo/src/chelsa.py"
+export INPUT_DIR="~/Documents/CHELSA_paleo_inputs/"
+export OUTPUT_DIR="~/Documents/CHELSA_paleo_outputs/"
+export SCRATCH_DIR="~/Documents/CHELSA_paleo_scratch/"
 
 seq $END -1 $START | parallel --bar -j 12 -k '
     TMP_PREFIX=$(printf "%04d" {}) &&
