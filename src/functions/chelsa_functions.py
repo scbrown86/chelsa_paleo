@@ -32,7 +32,7 @@ def calculate_windeffect(Coarse, Dem):
     :rtype: CSG_Grid
     """
 
-    print("Function 'calculate_windeffect' has started.")
+    # print("Function 'calculate_windeffect' has started.")
 
     ## import the wind files
     Coarse.set('uwind')
@@ -79,7 +79,7 @@ def calculate_windeffect(Coarse, Dem):
     saga_api.SG_Get_Data_Manager().Delete(vwind_shp)
     saga_api.SG_Get_Data_Manager().Delete(windef)
 
-    print("Function 'calculate_windeffect' has ended.")
+    # print("Function 'calculate_windeffect' has ended.")
 
     return windef1
 
@@ -97,7 +97,7 @@ def correct_windeffect(windef1, Coarse, Dem):
     :rtype: CSG_Grid
     """
     
-    print("Function 'correct_windeffect' has started.")
+    # print("Function 'correct_windeffect' has started.")
     
     Coarse.set('tas')
     Coarse.set('huss')
@@ -154,7 +154,7 @@ def correct_windeffect(windef1, Coarse, Dem):
 
     Dem.delete('dem_low')
 
-    print("Function 'correct_windeffect' has ended.")
+    # print("Function 'correct_windeffect' has ended.")
 
     return wind_cor, wind_coarse
 
@@ -171,7 +171,7 @@ def precipitation(wind_cor, wind_coarse, Coarse):
     :rtype: CSG_Grid
     """
     
-    print("Function 'precipitation' has started.")
+    # print("Function 'precipitation' has started.")
 
     Coarse.set('pr')
 
@@ -192,7 +192,7 @@ def precipitation(wind_cor, wind_coarse, Coarse):
     saga_api.SG_Get_Data_Manager().Delete(prec)
     saga_api.SG_Get_Data_Manager().Delete(precip)
 
-    print("Function 'precipitation' has ended.")
+    # print("Function 'precipitation' has ended.")
 
     return precip_ccINT
 
@@ -208,7 +208,7 @@ def temperature(Coarse, Dem, var):
     :rtype: CSG_Grid
     """
     
-    print("Function 'temperature' has started.")
+    # print("Function 'temperature' has started.")
 
     # calculate temperature
     if var == 'tas':
@@ -254,7 +254,7 @@ def temperature(Coarse, Dem, var):
     # clean memory
     saga_api.SG_Get_Data_Manager().Delete(tmax_highres1)
 
-    print("Function 'temperature' has ended.")
+    # print("Function 'temperature' has ended.")
 
     return tas
 

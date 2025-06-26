@@ -15,7 +15,7 @@
 #You should have received a copy of the GNU General Public License
 #along with chelsa_paleo.  If not, see <https://www.gnu.org/licenses/>.
 
-
+# -*- coding: utf-8 -*-
 from functions.saga_functions import *
 
 class Coarse_data:
@@ -48,23 +48,41 @@ class Coarse_data:
             saga_api.SG_Get_Data_Manager().Delete(list.Get_Grid(m))
             list.Del_Items()
 
+    # def _build_(self, var):
+    #     if var != 'tlapse_mean' and var != 'rsds':
+    #         ds = import_ncdf(self.INPUT + 'clim/' + var + '.nc').Get_Grid(self.timestep)
+    #         setattr(self, var, ds)
+
+    #     if var == 'tlapse_mean':
+    #         talow = import_ncdf(self.INPUT + 'clim/ta_low.nc').Get_Grid(self.timestep)
+    #         tahigh = import_ncdf(self.INPUT + 'clim/ta_high.nc').Get_Grid(self.timestep)
+    #         zglow = import_ncdf(self.INPUT + 'clim/zg_low.nc').Get_Grid(self.timestep)
+    #         zghigh = import_ncdf(self.INPUT + 'clim/zg_high.nc').Get_Grid(self.timestep)#.Set_Scaling(0.10197162129)
+    #         tlapse_mean = tlapse(tahigh, talow , zghigh, zglow,  '(a-b)/(c-d)')
+    #         tlapse_mean1 = change_data_storage(tlapse_mean)
+    #         tlapse_mean2 = grid_calculator_simple(tlapse_mean1, 'a*(-1)')
+    #         setattr(self, var, tlapse_mean2)
+
+    #         saga_api.SG_Get_Data_Manager().Delete(tlapse_mean)
+    #         saga_api.SG_Get_Data_Manager().Delete(tlapse_mean1)
+    
     def _build_(self, var):
-        if var != 'tlapse_mean' and var != 'rsds':
-            ds = import_ncdf(self.INPUT + 'clim/' + var + '.nc').Get_Grid(self.timestep)
-            setattr(self, var, ds)
+    if var != 'tlapse_mean' and var != 'rsds':
+        ds = import_ncdf(self.INPUT + 'clim/' + var + '.nc', self.timestep)
+        setattr(self, var, ds)
 
-        if var == 'tlapse_mean':
-            talow = import_ncdf(self.INPUT + 'clim/ta_low.nc').Get_Grid(self.timestep)
-            tahigh = import_ncdf(self.INPUT + 'clim/ta_high.nc').Get_Grid(self.timestep)
-            zglow = import_ncdf(self.INPUT + 'clim/zg_low.nc').Get_Grid(self.timestep)
-            zghigh = import_ncdf(self.INPUT + 'clim/zg_high.nc').Get_Grid(self.timestep)#.Set_Scaling(0.10197162129)
-            tlapse_mean = tlapse(tahigh, talow , zghigh, zglow,  '(a-b)/(c-d)')
-            tlapse_mean1 = change_data_storage(tlapse_mean)
-            tlapse_mean2 = grid_calculator_simple(tlapse_mean1, 'a*(-1)')
-            setattr(self, var, tlapse_mean2)
+    if var == 'tlapse_mean':
+        talow  = import_ncdf(self.INPUT + 'clim/ta_low.nc',  self.timestep)
+        tahigh = import_ncdf(self.INPUT + 'clim/ta_high.nc', self.timestep)
+        zglow  = import_ncdf(self.INPUT + 'clim/zg_low.nc',  self.timestep)
+        zghigh = import_ncdf(self.INPUT + 'clim/zg_high.nc', self.timestep)
+        tlapse_mean  = tlapse(tahigh, talow, zghigh, zglow, '(a-b)/(c-d)')
+        tlapse_mean1 = change_data_storage(tlapse_mean)
+        tlapse_mean2 = grid_calculator_simple(tlapse_mean1, 'a*(-1)')
+        setattr(self, var, tlapse_mean2)
 
-            saga_api.SG_Get_Data_Manager().Delete(tlapse_mean)
-            saga_api.SG_Get_Data_Manager().Delete(tlapse_mean1)
+        saga_api.SG_Get_Data_Manager().Delete(tlapse_mean)
+        saga_api.SG_Get_Data_Manager().Delete(tlapse_mean1)
 
 
 class Dem_data:
@@ -77,7 +95,9 @@ class Dem_data:
         self.dem_high = None
         self.INPUT = INPUT
         self.time = int(time)
-
+        # comment this next line out, when not running with paleo timescale oro and oro_high
+        self.aux_step = (self.time - 1) // 12 # maps 1-12 -> 0, 13-24 -> 1, ..., 25849-25860 -> 2154
+        
     def set(self, var):
         if getattr(self, var) == None:
            return self._build_(var)
@@ -92,24 +112,44 @@ class Dem_data:
             saga_api.SG_Get_Data_Manager().Delete(list.Get_Grid(m))
             list.Del_Items()
 
+    # def _build_(self, var):
+    #     if var == 'demproj':
+    #         # ds1 = import_ncdf(self.INPUT + 'orog/oro_high.nc').Get_Grid(self.time)
+    #         # ds1 = import_ncdf(self.INPUT + 'orog/oro_high.nc').Get_Grid(0) # use first time step only
+    #         ds1 = import_ncdf(self.INPUT + 'orog/oro_high.nc').Get_Grid(self.aux_step) # use self.aux_step when running paleo scale data
+    #         set_2_latlong(ds1)
+    #         template = import_ncdf(self.INPUT + 'static/merc_template.nc').Get_Grid(0)
+    #         ds = pj2merc(ds1, template)
+    #         setattr(self, var, ds.asGrid())
+
+    #     if var == 'dem_low':
+    #         # ds = import_ncdf(self.INPUT + 'orog/oro.nc').Get_Grid(self.time)
+    #         # ds = import_ncdf(self.INPUT + 'orog/oro.nc').Get_Grid(0)
+    #         ds = import_ncdf(self.INPUT + 'orog/oro.nc').Get_Grid(self.aux_step) # use self.aux_step when running paleo scale data
+    #         ds = change_data_storage(ds)
+    #         setattr(self, var, ds)
+
+    #     if var == 'dem_high':
+    #         # ds = import_ncdf(self.INPUT + 'orog/oro_high.nc').Get_Grid(self.time)
+    #         # ds = import_ncdf(self.INPUT + 'orog/oro_high.nc').Get_Grid(0)
+    #         ds = import_ncdf(self.INPUT + 'orog/oro_high.nc').Get_Grid(self.aux_step) # use self.aux_step when running paleo scale data
+    #         ds = change_data_storage(ds)
+    #         setattr(self, var, ds)
     def _build_(self, var):
         if var == 'demproj':
-            # ds1 = import_ncdf(self.INPUT + 'orog/oro_high.nc').Get_Grid(self.time)
-            ds1 = import_ncdf(self.INPUT + 'orog/oro_high.nc').Get_Grid(0) # use first time step only
+            ds1 = import_ncdf(self.INPUT + 'orog/oro_high.nc', self.aux_step)
             set_2_latlong(ds1)
-            template = import_ncdf(self.INPUT + 'static/merc_template.nc').Get_Grid(0)
+            template = import_ncdf(self.INPUT + 'static/merc_template.nc', 0)
             ds = pj2merc(ds1, template)
             setattr(self, var, ds.asGrid())
-
+        
         if var == 'dem_low':
-            # ds = import_ncdf(self.INPUT + 'orog/oro.nc').Get_Grid(self.time)
-            ds = import_ncdf(self.INPUT + 'orog/oro.nc').Get_Grid(0)
+            ds = import_ncdf(self.INPUT + 'orog/oro.nc', self.aux_step)
             ds = change_data_storage(ds)
             setattr(self, var, ds)
-
+        
         if var == 'dem_high':
-            # ds = import_ncdf(self.INPUT + 'orog/oro_high.nc').Get_Grid(self.time)
-            ds = import_ncdf(self.INPUT + 'orog/oro_high.nc').Get_Grid(0)
+            ds = import_ncdf(self.INPUT + 'orog/oro_high.nc', self.aux_step)
             ds = change_data_storage(ds)
             setattr(self, var, ds)
 
