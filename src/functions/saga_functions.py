@@ -103,38 +103,13 @@ def import_gdal(File):
     return output
 
 
-# def import_ncdf(ncdffile):
-#     # _____________________________________
-#     # Create a new instance of tool 'Import NetCDF'
-#     Tool = saga_api.SG_Get_Tool_Library_Manager().Create_Tool('io_gdal', '6')
-#     if Tool == None:
-#         print 'Failed to create tool: Import NetCDF'
-#         return False
-
-#     Parm = Tool.Get_Parameters()
-#     Parm('FILE').Set_Value(ncdffile)
-#     Parm('SAVE_FILE').Set_Value(False)
-#     Parm('SAVE_PATH').Set_Value('')
-#     Parm('TRANSFORM').Set_Value(1)
-#     Parm('RESAMPLING').Set_Value(0)
-
-#     print 'Executing tool: ' + Tool.Get_Name().c_str()
-#     if Tool.Execute() == False:
-#         print 'failed'
-#         return False
-#     print 'okay'
-
-#     # _____________________________________
-
-#     output = Tool.Get_Parameter(saga_api.CSG_String('GRIDS')).asGridList()
-#     return output
-
-def import_ncdf(ncdffile, layer_index=0):
-    # Create tool instance
+def import_ncdf(ncdffile):
+    # _____________________________________
+    # Create a new instance of tool 'Import NetCDF'
     Tool = saga_api.SG_Get_Tool_Library_Manager().Create_Tool('io_gdal', '6')
-    if Tool is None:
+    if Tool == None:
         print 'Failed to create tool: Import NetCDF'
-        return None
+        return False
 
     Parm = Tool.Get_Parameters()
     Parm('FILE').Set_Value(ncdffile)
@@ -144,17 +119,15 @@ def import_ncdf(ncdffile, layer_index=0):
     Parm('RESAMPLING').Set_Value(0)
 
     print 'Executing tool: ' + Tool.Get_Name().c_str()
-    if Tool.Execute() is False:
-        print 'Failed to execute'
-        return None
+    if Tool.Execute() == False:
+        print 'failed'
+        return False
+    print 'okay'
+
+    # _____________________________________
 
     output = Tool.Get_Parameter(saga_api.CSG_String('GRIDS')).asGridList()
-
-    if layer_index >= output.Get_Item_Count():
-        print 'Layer index %d out of range (max %d)' % (layer_index, output.Get_Item_Count() - 1)
-        return None
-
-    return output.Get_Grid(layer_index)
+    return output
 
 
 def polynomial_trends(File1, File2):
